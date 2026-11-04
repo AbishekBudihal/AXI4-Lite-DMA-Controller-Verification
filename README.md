@@ -1,4 +1,4 @@
-# AXI4-Lite peripherals and DMA control front-end
+# AXI4-Lite Peripheral & DMA Controller with Self-Checking Testbenches
 
 Verilog implementations of a four-register AXI4-Lite peripheral and a DMA control model, with separate self-checking testbenches.
 
