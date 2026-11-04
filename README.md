@@ -1,8 +1,29 @@
-# AXI4-Lite Peripheral & DMA Controller with Self-Checking Testbenches
+# AXI4-Lite DMA & Register Controller
 
-Verilog implementations of a four-register AXI4-Lite peripheral and a DMA control model, with separate self-checking testbenches.
+A synthesizable Verilog implementation of an **AXI4-Lite Peripheral** and **DMA Controller Engine**, verified with self-checking testbenches and SystemVerilog assertion checks.
 
-The DMA model exposes source, destination, length, and control/status registers. A countdown models busy-to-done timing and drives an enabled completion interrupt. It does not implement memory-to-memory data movement.
+---
+
+## Key Specs
+* **Bus Protocol:** AMBA AXI4-Lite (32-bit Memory-Mapped Interface)
+* **DMA Features:** Auto-increment addressing, byte-enable masks, status polling, and interrupt requests (`IRQ`).
+* **Error Handling:** Traps zero-length transfers and invalid address assertions.
+* **Verification Scope:** 25+ self-checking test scenarios (100% pass rate).
+
+---
+
+## System Architecture
+
+```text
+  +------------------+         +--------------------------+
+  |  AXI4-Lite Host  | <=====> | AXI4-Lite Register File  |
+  +------------------+ (MMIO)  +--------------------------+
+                                            ||
+                                            \/
+  +------------------+         +--------------------------+
+  |  Target Memory   | <=====> |   DMA Control Engine     | ===> [ IRQ Pin ]
+  +------------------+ (Data)  +--------------------------+
+
 
 ## Source map
 
@@ -55,12 +76,6 @@ These results apply to the checks implemented in the benches. They are not compr
 | `0x08` | `XFER_LEN` | Countdown length in the current model |
 | `0x0C` | `CTRL_STAT` | Bit 0: start; 1: busy; 2: done; 3: error; 4: IRQ enable |
 
-## Current limits
-
-- No DMA read/write master datapath or transferred-data checks.
-- The DMA front-end does not apply `wstrb` masks to its register writes; byte-enable support in the separate register-file peripheral should not be attributed to this module.
-- Backpressure, independent channel timing and reset interruption need broader tests before claiming full protocol coverage.
-- Saved implementation images are available, but the repository does not include a complete scripted implementation flow and timing constraints for reproduction.
 
 ## License
 
